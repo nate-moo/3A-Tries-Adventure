@@ -12,4 +12,4 @@
 	*/
   // bit is 0 to 31, sets the bit to "off"
   static inline void set_bit_off( int& mask, unsigned bit ) 
-  { mask ^= (1<<bit); }    
+  { mask &= (1<<bit); }    
