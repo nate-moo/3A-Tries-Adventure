@@ -44,11 +44,11 @@ bool coinflip( );
  * can specify a partial shuffling
  */
 template<typename T>
-void fisher_yates( std::vector< T >& v, size_t count = 0)
+void fisher_yates( std::vector< T >& v, std::size_t count = 0)
 {
 	// fisher yates 
-	for( size_t i=0; i<v.size()-1 && count!=0; ++i ) {
-		size_t to = equalikely(i,v.size()-1);
+	for( std::size_t i=0; i<v.size()-1 && count!=0; ++i ) {
+		std::size_t to = equalikely(i,v.size()-1);
 		std::swap( v[i], v[to] );
 		--count;
 	}
