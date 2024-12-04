@@ -98,11 +98,12 @@ trie::trie() {
 }
 
 void trie::traverse(trie::node *input, std::vector<std::string> &outputList, const std::string &prefix) {
-    bool end = false;
-    if (input->terminal) outputList.emplace_back(prefix);
+    if (input->terminal) {
+        outputList.emplace_back(prefix);
+        noderef.emplace_back(input);
+    }
     for (int i = 0; i < 26; ++i) {
         if (input->children[i] != nullptr) {
-            end = true;
             std::string newPrefix = prefix + input->children[i]->c;
 
             traverse(input->children[i], outputList, newPrefix);
@@ -110,3 +111,33 @@ void trie::traverse(trie::node *input, std::vector<std::string> &outputList, con
     }
 }
 
+void trie::finalize() {
+
+}
+
+std::size_t trie::size() {
+    std::vector<std::string> outlist;
+//    size_t count = 0;
+
+    for (int i = 0; i < 26; ++i) {
+        if (root[i] == nullptr) continue;
+        traverse(root[i], outlist, "");
+//        count += outlist.size();
+    }
+
+    return outlist.size();
+}
+
+void trie::children_histogram(std::vector<size_t> &histo) {
+    int count = 0;
+
+    for (int i = 0; i < 26; ++i) {
+        if (root[i] != nullptr) {
+            count++;
+            root[i]->children_histogram(histo);
+        }
+    }
+
+    histo[count]++;
+    histo[0] = size();
+}

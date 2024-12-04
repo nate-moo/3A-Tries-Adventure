@@ -26,20 +26,46 @@ public:
     bool contains(const std::string &s);
     bool is_prefix(const std::string &s);
     void extend(const std::string &prefix, std::vector<std::string> &result);
+    void finalize();
+    std::size_t size();
+    void children_histogram(std::vector<size_t>& histo);
     trie();
 
 private:
 
-    struct node {
+    class node {
+    public:
         char c{};
         bool terminal = false;
         node* children[26]{};
+
+        std::size_t node_children() {
+            int count = 0;
+            for (int i = 0; i < 26; ++i) {
+                if (children[i] != nullptr) count++;
+            }
+            return count;
+        }
+
+        void children_histogram(std::vector<size_t>& histo) {
+            histo[this->node_children()]++;
+            for (std::size_t i = 0; i < 26; ++i) {
+                if (children[i] != nullptr) {
+
+                    children[i]->children_histogram(histo);
+                }
+            }
+        }
     };
 
     node* root[26];
     int conv(char c);
     void traverse(node* input, std::vector<std::string> &outputList, const std::string &prefix);
+
+public:
+    std::vector<node*> noderef;
 };
+
 
 //struct node {
 //    char c{};

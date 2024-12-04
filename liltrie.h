@@ -211,6 +211,7 @@ void collect_child_histogram( Y& trie, std::vector<std::string>& dict, std::vect
 	}
 	cerr << endl;
 	cerr.flags( flags );
+
 }
 
 

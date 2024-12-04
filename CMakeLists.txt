@@ -20,8 +20,12 @@ file(COPY dictionary.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 add_compile_options(-pedantic -Wall -Wextra -Werror=vla)
 
 add_executable(run-test trie.h trie.cpp liltrie.h liltrie.cpp bitwiseops.h random220.h 
-		main-test.cpp random220.cpp)
+		main-test.cpp random220.cpp
+		mtrie.cpp
+		mtrie.h)
 
 add_executable(run-main trie.h trie.cpp liltrie.h liltrie.cpp bitwiseops.h random220.h 
-		main.cpp random220.cpp)
+		main.cpp random220.cpp
+		mtrie.cpp
+		mtrie.h)
 
