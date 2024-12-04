@@ -14,15 +14,20 @@ void trie::insert(const std::string &s) {
 
     if (root[begin] == nullptr) root[begin] = new node{};
 
+    if (s.empty()) return;
+
     node *point = root[begin];
 
     for (size_t i = 0; i < s.length() - 1; ++i) {
         point->c = s[i];
 
-        if (point->children[trie::conv(s[i + 1])] == nullptr) { point->children[trie::conv(s[i + 1])] = new node{}; }
+        if (point->children[trie::conv(s[i + 1])] == nullptr) {
+            point->children[trie::conv(s[i + 1])] = new node{};
+        }
 
         point = point->children[trie::conv(s[i + 1])];
     }
+
     point->c = s[s.length() - 1];
 
     point->terminal = true;
@@ -33,6 +38,8 @@ bool trie::contains(const std::string &s) {
     node *point = root[trie::conv(s[0])];
 
     if (point == nullptr) return false;
+
+    if (s.empty()) return false;
 
     for (size_t i = 0; i < s.length() - 1; ++i) {
         if (point == nullptr || point->c != s[i]) return false;
@@ -128,16 +135,16 @@ std::size_t trie::size() {
     return outlist.size();
 }
 
-void trie::children_histogram(std::vector<size_t> &histo) {
-    int count = 0;
-
-    for (int i = 0; i < 26; ++i) {
-        if (root[i] != nullptr) {
-            count++;
-            root[i]->children_histogram(histo);
-        }
-    }
-
-    histo[count]++;
-    histo[0] = size();
-}
+// void trie::children_histogram(std::vector<size_t> &histo) {
+//     int count = 0;
+//
+//     for (int i = 0; i < 26; ++i) {
+//         if (root[i] != nullptr) {
+//             count++;
+//             root[i]->children_histogram(histo);
+//         }
+//     }
+//
+//     histo[count]++;
+//     histo[0] = size();
+// }

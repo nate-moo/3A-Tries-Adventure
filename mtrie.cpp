@@ -6,65 +6,94 @@
 #include "bitwiseops.h"
 #include "liltrie.h"
 
-void mtrie::insert(const std::string &s) {
-    node* ptr = &root;
-    node* ptr_prev = nullptr;
+void mtrie::insert(const std::string &s, node* ptr) {
+    if (ptr == nullptr) ptr = &root;
 
-    for (size_t i = 0; i < s.length(); ++i) {
-        size_t count(0);
-        size_t bit = mtrie::conv(s[i]);
+    std::string newString = s.substr(1);
 
-        size_t len(0);
+    size_t len = 0;
+    size_t idx = 0;
 
-        for (int j = 0; j < LETTERS; ++j) {
-            len += bit_on(ptr->mask, j);
-        }
-
-        if (!bit_on(ptr->mask, bit))
-            set_bit_on(ptr->mask, bit);
-
-        auto temp = new node::node_ptr;
-        size_t idx(0);
-
-        for (int j = 0; j < mtrie::conv(s[i]); ++j) {
-            idx += bit_on(ptr->mask, j);
-        }
-
-
-
-        if (len > idx) {
-            for (size_t j = 0; j < idx; ++j) {
-                temp[j] = ptr->children[j];
-            }
-
-            temp[idx] = new node;
-
-            for (size_t j = idx; j < len; ++j) {
-                temp[j + 1] = new node;
-                temp[j + 1] = ptr->children[j];
-            }
-        } else {
-            temp[idx] = new node;
-        }
-
-
-
-        for (size_t j = 0; j < len; ++j) {
-            temp[j] = ptr->children[j];
-        }
-
-        ptr->children = temp;
-        ptr_prev = ptr;
-        ptr = ptr->children[idx];
+    for (int j = 0; j < LETTERS; ++j) { // EQ9
+        if (j < mtrie::conv(s[0])) idx += bit_on(ptr->mask, j);
+        len += bit_on(ptr->mask, j);
     }
-    set_bit_on(ptr_prev->mask, 31);
+
+    // size_t childLen = sizeof(ptr->children) / (double)sizeof(ptr->children[0]);
+    if (ptr->children == nullptr || len == 0) {
+        ptr->children = new node*[len];
+    }
+
+    if (!bit_on(ptr->mask, mtrie::conv(s[0]))) {
+        auto newArr = new node*[len + 1];
+
+        for (int i = 0; i < len; ++i) {
+            if (i < idx) {
+                newArr[i] = ptr->children[i];
+            } else if (i >= idx) {
+                newArr[i+1] = ptr->children[i];
+            }
+        }
+
+
+        delete[] ptr->children;
+        ptr->children = newArr;
+        ptr->children[idx] = nullptr;
+    }
+
+    if (ptr->children[idx] == nullptr) {
+        ptr->children[idx] = new node;
+    }
+    // node *child = ;
+
+    set_bit_on(ptr->mask, mtrie::conv(s[0]));
+
+    if (newString.empty()) {
+        set_bit_on(ptr->mask, 31); // terminal bit
+        return;
+    }
+
+    insert(newString, ptr->children[idx]);
+
 }
 
-bool mtrie::contains(const std::string &s) {
-    return false;
+bool mtrie::contains(const std::string &s, node* ptr) {
+    if (ptr == nullptr) ptr = &root;
+
+    if (s.empty()) { return false; }
+
+    std::string newString = s.substr(1);
+
+    size_t len = 0;
+    size_t idx = 0;
+
+    for (int j = 0; j < LETTERS; ++j) { // EQ9
+        if (j < mtrie::conv(s[0])) idx += bit_on(ptr->mask, j);
+        len += bit_on(ptr->mask, j);
+    }
+
+    if (ptr->children == nullptr || len == 0) {
+        ptr->children = new node*[len];
+    }
+
+    if (!bit_on(ptr->mask, mtrie::conv(s[0]))) {
+        return false;
+    }
+
+    if (newString.empty()) {
+        return bit_on(ptr->mask, 31);
+    }
+
+    return contains(newString, ptr->children[idx]);
 }
 
-mtrie::mtrie() = default;
+mtrie::mtrie() {
+
+};
+
+mtrie::~mtrie() {
+
+}
 
 int mtrie::conv(char c) {
     return (int) c - 97;

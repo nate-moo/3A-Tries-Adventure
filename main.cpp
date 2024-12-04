@@ -13,12 +13,37 @@ size_t LnodeFootprintEquation(size_t n);
 
 size_t MnodeFootprintEquation(std::vector<size_t> h);
 
+using namespace std;
 int main()
 {
 
-    mtrie trie;
-    trie.insert("hello");
-    trie.insert("bye");
+    // mtrie trie;
+    //
+    // trie.insert("hello");
+    // trie.insert("bye");
+    //
+    // std::cout << trie.contains("hello")
+    //           << trie.contains("bye")
+    //           << trie.contains("hellppp") << std::endl;
+
+    std::vector<std::string> dict(20000);
+
+    std::ifstream input("dictionary.txt");
+    std::string word;
+
+    for (int i = 0; i < 20000; i++) {
+        input >> dict[i];
+        // if (dict[i].empty()) cout << "HELP" << endl;
+    }
+
+    trie trie3P;
+    mtrie trieO;
+    auto secs = time_trials( trie3P, trieO, dict, false );
+    size_t W = trie3P.size();
+    cout << W << " " << secs.second.count() - secs.first.count() << endl;
+
+    return 0;
+
 //    trie trie;
 //    std::vector<size_t> histo(LETTERS+1);
 

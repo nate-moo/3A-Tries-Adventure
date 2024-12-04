@@ -7,12 +7,6 @@
 int main()
 {
 
-
-
-
-//	std::cout << "If you are reading this, you've successfully built main-test in the LilTrieAdventure!" << std::endl;
-//	trie t;
-//
     trie trie;
     std::vector<size_t> histo(LETTERS+1);
     std::vector<std::string> words;
